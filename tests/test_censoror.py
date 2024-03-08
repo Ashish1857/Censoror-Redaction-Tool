@@ -9,6 +9,9 @@ def test_censoror():
     censoror_script_path = os.path.join(project_root, 'censoror.py')
     input_pattern = os.path.join(project_root, './', '*.txt')
     output_directory = os.path.join(project_root, 'files')
+    
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
 
     command = [
         'python', censoror_script_path,

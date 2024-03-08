@@ -4,7 +4,7 @@ import glob
 import os
 from assignment1.redact_functions import redact_text
 
-def load_files(input_pattern, default_directory='docs'):
+def load_files(input_pattern, default_directory='./'):
     if input_pattern:  # If a pattern is provided, use it to load files
         return glob.glob(input_pattern)
     else:  # If no pattern is provided, load all .txt files from the default directory

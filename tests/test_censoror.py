@@ -7,7 +7,7 @@ def test_censoror():
     # Get the absolute path of the project root
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     censoror_script_path = os.path.join(project_root, 'censoror.py')
-    input_pattern = os.path.join(project_root, 'docs', '*.txt')
+    input_pattern = os.path.join(project_root, './', '*.txt')
     output_directory = os.path.join(project_root, 'files')
 
     command = [

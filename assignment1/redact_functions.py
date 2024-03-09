@@ -4,7 +4,7 @@ import re
 import spacy
 from google.cloud import language_v1, language
 
-#spacy.cli.download("en_core_web_lg")
+spacy.cli.download("en_core_web_lg")
 
 # Loading the spaCy model for named entity recognition (NER)
 nlp = spacy.load('en_core_web_lg')

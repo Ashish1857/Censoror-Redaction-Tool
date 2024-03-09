@@ -1,132 +1,122 @@
+# Importing necessary libraries
+import os
 import re
 import spacy
-import usaddress
-import spacy.cli
+from google.cloud import language_v1, language
 
-spacy.cli.download("en_core_web_lg")
-nlp = spacy.load('en_core_web_lg')  # Larger models may have better NER capabilities
+#spacy.cli.download("en_core_web_lg")
 
+# Loading the spaCy model for named entity recognition (NER)
+nlp = spacy.load('en_core_web_lg')
+
+# This function filters out strings that are exactly four digits long.
+# These are often not sensitive entities but could be years or other numerical data.
+def filter_out_4_digit_numbers(strings):
+    return [s for s in strings if not re.match(r'^\d{4}$', s)]
+
+# This function replaces identified entities with a block character.
+# The block character is a visual indicator of redaction in the output text.
+def replace_with_blocks(text, entities, file_path, args):
+    # Removing any four-digit numbers as they are typically not entities of interest.
+    ent = filter_out_4_digit_numbers(entities)
+    for replace_str in ent:
+        # Creating a string of block characters of equal length to the entity.
+        full_block = "\u2588" * len(replace_str)
+        text = text.replace(replace_str, full_block)  # Performing the replacement in the text.
+
+    # Calling the function to save the redacted output to a file.
+    save_redacted_file(text, file_path, args)
+
+# This function utilizes Google Cloud's Language API to identify and redact entities from the text.
+def gcp_usage(text_content, file_path, args):
+    # Setting up the client with the provided JSON credentials.
+    client = language_v1.LanguageServiceClient.from_service_account_json('service.json')
+
+    # Creating a document for analysis by the Language API.
+    document = language_v1.Document(content=text_content, type_=language_v1.Document.Type.PLAIN_TEXT)
+
+    # Calling the API to analyze entities within the document.
+    response = client.analyze_entities(document=document, encoding_type=language_v1.EncodingType.UTF8)
+
+    # Extracting the text of the entities identified by the API call.
+    entities = response.entities
+    entity_texts = [entity.name for entity in entities if language_v1.Entity.Type(entity.type_).name in ['DATE', 'ADDRESS', 'PHONE_NUMBER']]
+
+    # Redacting the entities by replacing them with block characters.
+    replace_with_blocks(text_content, entity_texts, file_path, args)
+
+# This function combines spaCy NER and Google Cloud's Language API to identify entities.
+def analyze_entities(text_content, nlp):
+    # Using spaCy to identify names within the text.
+    doc = nlp(text_content)
+    names = [ent.text for ent in doc.ents if ent.label_ == "PERSON"]
+
+    # Setting up the client and performing the analysis.
+    client = language.LanguageServiceClient.from_service_account_json('services.json')
+    document = language_v1.Document(content=text_content, type_=language_v1.Document.Type.PLAIN_TEXT)
+    response = client.analyze_entities(document=document, encoding_type=language_v1.EncodingType.UTF8)
+
+    # Extracting entity names and combining them with spaCy-detected names.
+    entities = response.entities
+    entity_texts = [entity.name for entity in entities if language_v1.Entity.Type(entity.type_).name in ['DATE', 'ADDRESS', 'PHONE_NUMBER']]
+    entity_texts += names
+
+    return entity_texts
+
+# Function to redact names found in folder paths, often present in email headers.
 def redact_folder_names(text):
-    # Regular expression to find folder names following 'X-Folder:'
+    # Matching the pattern of folder paths in the text.
     folder_pattern = re.compile(r'X-Folder: [\\]*\\([^\n\\]+)\\')
     matches = folder_pattern.findall(text)
     for match in matches:
-        # Split the match by underscores or commas and check each part with spaCy NER
         parts = re.split('_|, ', match)
         for part in parts:
             doc = nlp(part)
             for ent in doc.ents:
                 if ent.label_ == 'PERSON':
-                    # Replace the entire matched folder name with [REDACTED]
-                    text = text.replace(match, '[REDACTED]')
-                    break  # If a name is detected, no need to check the rest of the entity matches
+                    text = text.replace(match, "\u2588" * len(match))
+                    break
     return text
-    
-    
+
+# Main function to redact names identified by spaCy.
 def redact_names(text):
-    # Use spaCy's NER to redact names throughout the text
     doc = nlp(text)
     for ent in doc.ents:
         if ent.label_ == 'PERSON':
-            # Create a pattern to match the full name
-            name_pattern = r'\b' + re.escape(ent.text) + r'\b'
-            # Redact the full name with [REDACTED]
-            text = re.sub(name_pattern, '[REDACTED]', text)
-    
-    # Handling for the list of names
-    # This assumes the list is separated by newlines and each name follows the format: Lastname, Firstname
-    name_list_pattern = re.compile(r'(?:\n[A-Z][a-z]+, [A-Z][a-z]+)+')
-    matches = name_list_pattern.findall(text)
-    for match in matches:
-        # Split the matched text into individual names
-        names = match.strip().split('\n')
-        for name in names:
-            if name:
-                # Redact each name individually
-                text = text.replace(name, '[REDACTED]')
+            text = text.replace(ent.text, "\u2588" * len(ent.text))
     text = redact_folder_names(text)
     return text
 
-
-def redact_emails(text):
-    # This regex finds all email addresses
-    email_pattern = re.compile(r'\b[\w.-]+?@\w+?\.\w+?\b')
-    # This lambda function replaces the username part with [REDACTED]
-    return email_pattern.sub(lambda x: '[REDACTED]@' + x.group().split('@')[1], text)
-
+# Function to redact names within email addresses, which can contain personally identifiable information.
 def redact_names_in_emails(text):
-    # Regular expression to find email addresses
     email_pattern = re.compile(r'\b[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b')
-    # Use spaCy NER to check each username in the email address
     emails = email_pattern.findall(text)
     for email in emails:
         username = email.split('@')[0]
-        # Split the username by dots to check each part with spaCy NER
         for name_part in username.split('.'):
             doc = nlp(name_part)
             for ent in doc.ents:
                 if ent.label_ == 'PERSON':
-                    # Replace the username part of the email with [REDACTED]
-                    redacted_email = email.replace(username, '[REDACTED]')
+                    redacted_email = email.replace(username, "\u2588" * len(username))
                     text = text.replace(email, redacted_email)
-                    break  # If a name is detected, no need to check the rest of the username
+                    break
     return text
 
-def redact_dates(text):
-    # Pattern to match the date format 'Day, DD Mon YYYY HH:MM:SS -TZ (TZD)'
-    date_pattern = re.compile(r'''
-    (?:\b(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?  # Weekday
-    (?:\d{1,2}\s)?                              # Day (optional)
-    (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?,?\s  # Month
-    (?:\d{1,2},?\s)?                            # Day (optional)
-    \d{2,4}                                     # Year
-    (?:\s\d{1,2}:\d{2}(:\d{2})?\s?(?:AM|PM|am|pm)?)?  # Time (optional)
-    (?:\s-\d{4})?                               # Time zone offset (optional)
-    |                                           # OR
-    \b\d{1,2}/\d{1,2}/\d{2,4}\b                 # Numeric date
-    (?:\s\d{1,2}:\d{2}(?::\d{2})?\s?(?:AM|PM|am|pm))?  # Time (optional)
-    ''', re.VERBOSE | re.IGNORECASE)
+# Function to save the redacted text to a new file with '.censored' appended to the original file name.
+def save_redacted_file(text, original_file_path, output_directory):
+    output_file_name = os.path.basename(original_file_path) + ".censored"
+    output_file_path = os.path.join(output_directory, output_file_name)
 
-    
-    # Replace the entire date with [REDACTED]
-    redacted_text = date_pattern.sub('[REDACTED]', text)
-    return redacted_text
+    os.makedirs(output_directory, exist_ok=True)
 
-def redact_phone_numbers(text):
-    phone_pattern = re.compile(
-    r'''
-    (\+\d{1,3}([-.\s]?))?          # International code + separator (optional)
-    (\(\d{1,4}\)|\d{1,4})          # Area code or country code with/without parentheses
-    ([-.\s]?\d{1,4}){1,3}          # One to three groups of up to 4 digits, separated by optional separators
-    ''', re.VERBOSE)
+    with open(output_file_path, 'w') as output_file:
+        if text is not None:
+            output_file.write(text)
 
-    return phone_pattern.sub('[REDACTED]', text)
-
-def redact_addresses(text):
-    # logic to redact addresses
-    doc = nlp(text)
-    tagged_address, _ = usaddress.tag(text)
-
-    # Example for redacting the street number
-    if 'AddressNumber' in tagged_address:
-        text = text.replace(tagged_address['AddressNumber'], '[REDACTED]')
-        
-    text = re.sub(r'\b\d{5}(-\d{4})?\b', '[REDACTED]', text)
-    
-    for ent in doc.ents:
-        if ent.label_ == "PERSON":
-            text = text.replace(ent.text, "[REDACTED]")
-    return text
-
-def redact_text(text, flags):
+def redact_text(text, flags, file_path, args):
     if flags['names']:
         text = redact_names(text)
-    if flags['dates']:
-        text = redact_dates(text)
-    if flags['phones']:
-        text = redact_phone_numbers(text)
-    if flags['address']:
-        text = redact_addresses(text)
-    if flags['names']:
-        text = redact_names_in_emails(text)   
+        text = redact_names_in_emails(text)
+    if flags['phones' or 'address' or 'dates']:
+        text = gcp_usage(text, file_path, args) 
     return text

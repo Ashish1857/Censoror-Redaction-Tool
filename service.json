@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "peak-hangout-416705",
+  "private_key_id": "b303a2315ebca6b17675aa053463025b6adc96c9",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCv7zghNsxi2Avt\nNzRBDOcE/MCN5qexbg+cjhr5096ML7+I64PSS4nrLsIxJViAHox8VDDyCm+yyoac\nvcEQaBh1rRtTyBPTv/LudvyQZdDIzTtMtJnDGpOzwfntq4++e7gGIFVUe2o2l5yn\nIOre5h1s6VyMW02yIHiXkmuSTC0uzEACyicD9+qCwaPmY4nxrO20RH9kom5BCWmD\n0IHJxbnLX/DVNAGULbY4+Rtk/Bl4L83ponAO0xYudwL3JTImlWTXRAywUqfvNEFP\nra2OobRF1qkmL+Dxu4nOMb+qz9b789r3eaWkoHmr44jRDtvHw6WGWlbQ32bDjgSz\noqMMyv/DAgMBAAECggEALzyPWXuZDMDtEtfLk9ue+1vRZ0gSpjTixCnzXDhifEkl\np+F0FzZo5Vg8k21vgZayKX+BVLswmlR+J/9aoskQKCg+OhRyHlxfIV+ZGDv9/qv7\ny/CBiDzOg2kFbaauhXo6QorT3kb0kYvLZ6QS653lMKTHUHgDOFw3hJqvfywsxW9m\nT4xU2rk1qaRHerSMHyZM2xajCIl3b2b8mp6D3TQaFk1aYf8bQS3i05VyAaFzCly8\nZb1khOgZUls66mL5lM2fIX4gevNPO9bWu9BYiopLVw79cnteaxYn2zo2y5DloY1H\nCV37BVBhqUGDh7/VyvzGgFi4ogZygLEAB+x1LMTYQQKBgQD2qt7rjkh89vQC+RoD\nOaTbuSCh0dIZq1Q5yz9zIU6YPMxqDKyo7noirp1WbOfVThaQNvOd/hNzpgE5a6lL\nRNkg0tt/ecXuDq03IVi5ZUZD5nOC+QVxUOfbqORRvyJc7xqk5pNn8VdSarKR1GYh\nkgv1wGQIOt3exAFLVQCh1AFR+wKBgQC2l0E9Glji4k+euvK3X9SvFmH8qWLdrf+A\nWx5CsEOUobsH7XX8Z2qKnYAtJtFVCzNFsWBmI2uRnupVXTEBXR7ZW8yPaKigv8qu\n5H7oP24XmwDZr81Ar/MBK3/L/wC8iBAya2C8ZrWztrL2CZZug+Tw0auvyjhmyAnz\nBwrMTf/m2QKBgDnEQnh/1dIOM48Or1zZ/xXGATJkZQPF7++o/a8EuddFRcoANd9K\nGihNJGO9FX4Kz5XuiJcTjZKj6d18rSUHdqINP4JXDld18HLcyF6CrTXxnlOp5fBn\ntiTnJLFQRcfl5yN/LD5Hct/GRROJ3nE2Nr7S05ppztQAqxztRzye3cBJAoGAUeTR\nO+ifSVObxmOvDRQMPmNZm4sVbrvlxtoXXm3UQcuwKUQWERkJLhaqMJYieXRGkNGX\nnPfx/SQ7kgH0QtpTRcXon8GfMEoVTA/r45rfc/LvlLNG6eaApVuvO/2phOW57gM/\nJgEjKfGdnsB6GiNKAcDosjWOynqaC8hyzWOGjTECgYAE19yMKbDg8MZpEQ7y7RcJ\nxI7d2BcwhUKApWTPW6ghxCmcDhIsayCkpYDzBt/whr8KqqBRmWbExIsWpqhgV7jX\nIWH81pmbHvR4dHbXkCTojDWmZ1HqrwmPLLyHUgyOgUDEtMALi74cBkRpaNwfiOz0\ntzR5hRtGM1NXr3ieU9XHSg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "assignment1@peak-hangout-416705.iam.gserviceaccount.com",
+  "client_id": "109984225298728761915",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/assignment1%40peak-hangout-416705.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -1,4 +1,12 @@
 from snorkel.labeling import labeling_function
+import spacy
+import spacy.cli
+from google.cloud import language
+from google.cloud import language_v1
+
+#spacy.cli.download("en_core_web_lg")
+nlp = spacy.load('en_core_web_lg')  # Larger models may have better NER capabilities
+
 
 ABSTAIN = -1
 NAME = 0
@@ -8,20 +16,8 @@ ADDRESS = 3
 
 @labeling_function()
 def lf_contains_name(x):
-    # Add your logic to detect names
-    return NAME if 'John' in x else ABSTAIN
-
-@labeling_function()
-def lf_contains_date(x):
-    # Add your logic to detect dates
-    return DATE if '2020' in x else ABSTAIN
-
-@labeling_function()
-def lf_contains_phone_number(x):
-    # Add your logic to detect phone numbers
-    return PHONE if '123-456-7890' in x else ABSTAIN
-
-@labeling_function()
-def lf_contains_address(x):
-    # Add your logic to detect addresses
-    return ADDRESS if 'Main Street' in x else ABSTAIN
+    doc = nlp(x)
+    for ent in doc.ents:
+        if ent.label_ == 'PERSON':
+            x = x.replace(ent.text, "\u2588" * len(ent.text))
+    return x if x else ABSTAIN

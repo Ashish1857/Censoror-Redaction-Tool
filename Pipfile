@@ -9,6 +9,7 @@ pandas = "*"
 scikit-learn = "*"
 spacy = "*"
 transformers = "*"
+pytest = "*"
 
 [dev-packages]
 

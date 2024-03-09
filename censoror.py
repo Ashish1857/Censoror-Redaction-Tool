@@ -27,7 +27,6 @@ def main():
     parser.add_argument('--output', type=str, help="Directory to save censored files.", default='files')
     args = parser.parse_args()
 
-    # If we're testing (no specific input given), use the 'docs' directory
     input_pattern = args.input if args.input else '*.txt'
     file_paths = load_files(args.input or 'docs/*.txt')  # Use provided pattern or default to docs
 

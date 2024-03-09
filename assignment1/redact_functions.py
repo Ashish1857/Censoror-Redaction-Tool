@@ -1,6 +1,9 @@
 import re
 import spacy
 import usaddress
+import spacy.cli
+
+spacy.cli.download("en_core_web_lg")
 nlp = spacy.load('en_core_web_lg')  # Larger models may have better NER capabilities
 
 def redact_folder_names(text):

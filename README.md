@@ -14,6 +14,8 @@ Clone the repository and navigate to the project directory. Install dependencies
 pip install
 ```
 
+## How to run
+
 ## Features
 
 - Redaction of personal names, dates, phone numbers, and addresses.
@@ -120,7 +122,11 @@ def redact_folder_names(text):
 
 # License
 
-[MIT LICENSE]
+This project is licensed under the MIT License - see the [LICENSE] file for details.
+
+# Authors
+
+Ashish Anand - Initial work - ashish.anand@ufl.edu
 
 # Assumptions, Bugs, and Limitations
 

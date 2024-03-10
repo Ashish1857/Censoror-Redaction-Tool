@@ -10,7 +10,6 @@ scikit-learn = "*"
 spacy = "*"
 transformers = "*"
 pytest = "*"
-usaddress = "*"
 google-cloud-language = "*"
 
 [dev-packages]

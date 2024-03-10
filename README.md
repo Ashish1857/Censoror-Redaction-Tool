@@ -122,6 +122,45 @@ def redact_folder_names(text):
     ...
 ```
 
+## Test Suite for Censoror
+
+### Description
+
+The testing setup for the Censoror application, which is designed to redact sensitive information from text files. The tests cover various scenarios to ensure the effectiveness and accuracy of the redaction process.
+
+### Running Tests
+
+To run the test suite, execute the following command in the terminal from the root directory of the project:
+
+```bash
+pytest
+```
+
+### Test Scenarios
+
+The test cases cover a variety of scenarios including:
+
+- test_redact_names: Verifies that personal names are correctly identified and redacted.
+- test_redact_names_with_no_names: Checks that texts without personal names are not altered.
+- test_redact_names_case_insensitive: Ensures that the redaction is case-insensitive.
+- test_redact_names_in_emails: Confirms that names within email addresses are redacted.
+
+### How to Add New Tests
+
+To add a new test, create a function prefixed with test\_ in the test_redact_functions.py file. Use assertions to compare the output of the function being tested with the expected output.
+
+### Troubleshooting
+
+If tests fail unexpectedly, consider the following steps:
+
+- Check for syntax errors in the test cases.
+- Ensure that all dependencies are correctly installed.
+- Review the expected outcomes to match the updated logic in redaction functions.
+
+### Contributions
+
+- Contributions to the test suite are welcome. Please ensure that any new tests added are well-documented and that you update this README accordingly.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -167,3 +206,7 @@ I'd like to thank professor and the community for their invaluable insights and 
 ## Details
 
 For detailed documentation on the implementation, refer to the in-line comments within the censoror.py and redact_functions.py files.
+
+```
+
+```

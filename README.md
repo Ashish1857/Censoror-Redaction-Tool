@@ -16,7 +16,7 @@ pipenv install
 
 ## How to run
 
-![Video](docs/Video.gif)
+![Video](docs/video.gif)
 
 ## Features
 

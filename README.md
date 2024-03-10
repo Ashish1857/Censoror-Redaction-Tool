@@ -1,6 +1,6 @@
 # cis6930sp24-assignment1
 
-## Censoror - Sensitive Information Redaction Tool
+# Censoror - Sensitive Information Redaction Tool
 
 ## Introduction
 
@@ -11,22 +11,24 @@ Censoror is a Python-based command-line tool designed to redact sensitive inform
 Clone the repository and navigate to the project directory. Install dependencies via pipenv or pip, as defined in `Pipfile`.
 
 ```bash
-pip install
+pipenv install
 ```
 
 ## How to run
+
+![Video](docs/Video.gif)
 
 ## Features
 
 - Redaction of personal names, dates, phone numbers, and addresses.
 - Scalable to handle multiple files.
 
-# Usage
+## Usage
 
 Use the following command to run Censoror:
 
 ```bash
-python censoror.py --input '*.txt' --names --dates --phones --address --output 'files/'
+python censoror.py --input '*.txt' --names --dates --phones --address --output 'files/' --stats stderr
 ```
 
 ## Flags:
@@ -38,11 +40,11 @@ python censoror.py --input '*.txt' --names --dates --phones --address --output '
 - address: Flag to redact addresses.
 - output: Directory for saving redacted files.
 
-# Configuration
+## Configuration
 
 Set up service.json with your Google Cloud credentials for using the Google Cloud Natural Language API.
 
-# Dependencies
+## Dependencies
 
 - Python 3.11
 - Spacy
@@ -120,15 +122,15 @@ def redact_folder_names(text):
     ...
 ```
 
-# License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE] file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-# Authors
+## Authors
 
-Ashish Anand - Initial work - ashish.anand@ufl.edu
+- Ashish Anand - Initial work - [ashish.anand@ufl.edu](mailto:ashish.anand@ufl.edu)
 
-# Assumptions, Bugs, and Limitations
+## Assumptions, Bugs, and Limitations
 
 ## Assumptions
 
@@ -162,6 +164,6 @@ Please report any additional bugs or issues on the repository's issues page.
 
 I'd like to thank professor and the community for their invaluable insights and suggestions which have greatly improved the quality of this project. Special thanks go to the spaCy team for the amazing NLP library and Google Cloud for their powerful Language API which were instrumental in the development of this tool. Lastly, my gratitude goes to the <b>Snorkel<b> team for their novel approach to weak supervision, which has inspired aspects of this project.
 
-# Details
+## Details
 
 For detailed documentation on the implementation, refer to the in-line comments within the censoror.py and redact_functions.py files.

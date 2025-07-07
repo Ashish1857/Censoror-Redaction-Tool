@@ -1,5 +1,3 @@
-# cis6930sp24-assignment1
-
 # Censoror - Sensitive Information Redaction Tool
 
 ## Introduction
